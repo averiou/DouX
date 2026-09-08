@@ -138,25 +138,30 @@
     if ([DouXManager removeWatermark]){
         return 1;
     }
-    return %orig;
+return %orig;
 }
 %end
 
-%hook UIButton // follow confirmation broken 
+%hook UIButton
 - (void)_onTouchUpInside {
     if ([DouXManager followConfirmation] && [self.currentTitle isEqualToString:@"Follow"]) {
-        showConfirmation(^(void) { %orig; });
+        showConfirmation(^(void) {
+            %orig;
+        });
     } else {
         %orig;
     }
 }
 %end
+
 %hook AWEPlayInteractionUserAvatarElement
 - (void)onFollowViewClicked:(id)sender {
     if ([DouXManager followConfirmation]) {
-        showConfirmation(^(void) { %orig; });
+        showConfirmation(^(void) {
+            %orig;
+        });
     } else {
-        return %orig;
+        %orig;
     }
 }
 %end
