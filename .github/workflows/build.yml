@@ -1,0 +1,36 @@
+name: Build DouX TikTok IPA
+
+on:
+  workflow_dispatch:
+    inputs:
+      ipa_url:
+        description: 'Direct Download URL to Decrypted TikTok IPA'
+        required: true
+        default: ''
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Download Decrypted IPA
+        run: |
+          curl -L "${{ github.event.inputs.ipa_url }}" -o input.ipa
+
+      - name: Run Injection Script
+        run: |
+          python3 scripts/ipa_packager.py --ipa input.ipa
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DouX-TikTok-Patched
+          path: "*.ipa"
