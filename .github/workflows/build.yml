@@ -21,11 +21,20 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Checkout Theos
+        uses: actions/checkout@v4
+        with:
+          repository: theos/theos
+          submodules: recursive
+          path: theos
+
       - name: Download Decrypted IPA
         run: |
           curl -L "${{ github.event.inputs.ipa_url }}" -o input.ipa
 
       - name: Run Injection Script
+        env:
+          THEOS: ${{ github.workspace }}/theos
         run: |
           python3 scripts/ipa_packager.py --ipa input.ipa
 
